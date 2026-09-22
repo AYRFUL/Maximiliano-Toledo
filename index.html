@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Evita que Google y otros buscadores indexen esta página -->
+  <meta name="robots" content="noindex, nofollow">
+
   <title>Tarjeta Digital - Ayrful</title>
   <style>
     * {
@@ -32,17 +36,9 @@
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
     }
     .card.flipped {
       transform: rotateY(180deg);
-    }
-    
-    /* Desactiva los botones del frente cuando la tarjeta se da vuelta */
-    .card.flipped .front .btn-link,
-    .card.flipped .front .btn-web-front {
-      display: none !important;
-      pointer-events: none !important;
     }
 
     .face {
@@ -50,6 +46,7 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 15px 35px rgba(0,0,0,0.6);
@@ -59,64 +56,55 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      user-select: none;
     }
     .back {
       transform: rotateY(180deg);
     }
 
-    /* Enlaces directos a redes/contacto del FRENTE */
-    .btn-link {
-      position: absolute;
-      left: 12%;
-      width: 76%;
-      height: 38px;
-      text-decoration: none;
-      border-radius: 10px;
-      z-index: 50;
-    }
-
-    /* Posiciones verticales en el Frente */
-    .btn-wa   { top: 50%; }
-    .btn-tel  { top: 60%; }
-    .btn-mail { top: 70%; }
-    .btn-map  { top: 80%; }
-
-    /* Sitio Web en la base del Frente (www.ayrful.com.ar) */
-    .btn-web-front {
-      position: absolute;
-      top: 91%;
-      left: 10%;
-      width: 80%;
-      height: 8%;
-      text-decoration: none;
-      border-radius: 8px;
-      z-index: 50;
-    }
-
-    /* Sitio Web en la base del DORSO (Siempre activo y cliqueable) */
-    .btn-web-back {
-      position: absolute;
-      top: 91%;
-      left: 10%;
-      width: 80%;
-      height: 8%;
-      text-decoration: none;
-      border-radius: 8px;
-      z-index: 100 !important;
-      pointer-events: auto !important;
-    }
-
-    /* Zonas para activar el giro de la tarjeta */
+    /* Zona transparente para girar haciendo clic */
     .flip-zone {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 10;
+      z-index: 1;
+      cursor: pointer;
     }
 
-    /* Botón flotante inferior para girar */
+    /* Estilo base de los enlaces */
+    .btn-link, .btn-web-front, .btn-web-back {
+      position: absolute;
+      z-index: 100;
+      text-decoration: none;
+      background: transparent;
+      pointer-events: auto;
+    }
+
+    /* Posiciones en el Frente */
+    .btn-link { left: 12%; width: 76%; height: 38px; }
+    .btn-wa   { top: 47%; }
+    .btn-tel  { top: 57%; }
+    .btn-mail { top: 67%; }
+    .btn-map  { top: 77%; }
+
+    .btn-web-front {
+      top: 91%;
+      left: 10%;
+      width: 80%;
+      height: 7%;
+    }
+
+    /* Posición en el Dorso (www.ayrful.com.ar) */
+    .btn-web-back {
+      top: 91%;
+      left: 10%;
+      width: 80%;
+      height: 7%;
+    }
+
+    /* Botón Flotante Inferior */
     .flip-btn {
       margin-top: 20px;
       background: #1f2937;
@@ -126,6 +114,7 @@
       border-radius: 25px;
       font-size: 14px;
       cursor: pointer;
+      user-select: none;
     }
   </style>
 </head>
@@ -134,12 +123,13 @@
   <div class="card-container">
     <div class="card" id="card">
       
-      <!-- FRENTE: Botones de contacto + Enlace web al pie -->
+      <!-- FRENTE -->
       <div class="face front">
-        <img src="pagina1.png" alt="Frente Ayrful" onerror="this.src='pagina1.png.png'">
+        <img src="pagina1.png" alt="Frente Ayrful" id="imgFront">
         
         <div class="flip-zone" onclick="rotateCard()" title="Girar tarjeta"></div>
 
+        <!-- Botones con los datos de mtoledo -->
         <a href="https://wa.link/4ijgv7" target="_blank" class="btn-link btn-wa" title="WhatsApp"></a>
         <a href="tel:+541132917719" class="btn-link btn-tel" title="Llamar"></a>
         <a href="mailto:mtoledo@ayrful.com.ar" class="btn-link btn-mail" title="Email"></a>
@@ -147,15 +137,13 @@
         <a href="https://ayrful.com.ar/" target="_blank" class="btn-web-front" title="Sitio Web"></a>
       </div>
 
-      <!-- DORSO: Fondo para girar + Enlace interactivo en la parte inferior -->
+      <!-- DORSO -->
       <div class="face back">
-        <img src="pagina2.png" alt="Dorso Ayrful" onerror="this.src='pagina2.png.png'">
+        <img src="pagina2.png" alt="Dorso Ayrful" id="imgBack">
         
-        <!-- Enlace interactivo único en el dorso -->
-        <a href="https://ayrful.com.ar/" target="_blank" rel="noopener noreferrer" class="btn-web-back" title="Sitio Web Ayrful"></a>
-
-        <!-- Zona para girar de vuelta al tocar el fondo -->
         <div class="flip-zone" onclick="rotateCard()" title="Volver al frente"></div>
+
+        <a href="https://ayrful.com.ar/" target="_blank" class="btn-web-back" title="Sitio Web Ayrful"></a>
       </div>
 
     </div>
@@ -169,6 +157,19 @@
     function rotateCard() {
       document.getElementById('card').classList.toggle('flipped');
     }
+
+    // Detector de nombres alternativos por si Windows renombró los archivos
+    const imgFront = document.getElementById('imgFront');
+    imgFront.onerror = function() {
+      if (this.src.includes('pagina1.png')) this.src = 'pagina1.png.png';
+      else if (this.src.includes('pagina1.png.png')) this.src = 'pagina1.JPG';
+    };
+
+    const imgBack = document.getElementById('imgBack');
+    imgBack.onerror = function() {
+      if (this.src.includes('pagina2.png')) this.src = 'pagina2.png.png';
+      else if (this.src.includes('pagina2.png.png')) this.src = 'pagina2.JPG';
+    };
   </script>
 
 </body>
