@@ -36,6 +36,7 @@
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
     }
     .card.flipped {
       transform: rotateY(180deg);
@@ -62,16 +63,12 @@
       transform: rotateY(180deg);
     }
 
-    /* Zona transparente para girar haciendo clic */
-    .flip-zone {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      cursor: pointer;
-    }
+    /* Ocultamiento dinámico para evitar clics indeseados en la cara trasera */
+    .front-links { display: block; }
+    .back-links { display: none; }
+
+    .card.flipped .front-links { display: none; }
+    .card.flipped .back-links { display: block; }
 
     /* Estilo base de los enlaces */
     .btn-link, .btn-web-front, .btn-web-back {
@@ -79,18 +76,17 @@
       z-index: 100;
       text-decoration: none;
       background: transparent;
-      pointer-events: auto;
     }
 
     /* Posiciones en el Frente */
     .btn-link { left: 12%; width: 76%; height: 38px; }
-    .btn-wa   { top: 47%; }
-    .btn-tel  { top: 57%; }
+    .btn-wa   { top: 51%; }
+    .btn-tel  { top: 59%; }
     .btn-mail { top: 67%; }
-    .btn-map  { top: 77%; }
+    .btn-map  { top: 75%; }
 
     .btn-web-front {
-      top: 91%;
+      top: 83%;
       left: 10%;
       width: 80%;
       height: 7%;
@@ -98,7 +94,7 @@
 
     /* Posición en el Dorso (www.ayrful.com.ar) */
     .btn-web-back {
-      top: 91%;
+      top: 83%;
       left: 10%;
       width: 80%;
       height: 7%;
@@ -115,47 +111,61 @@
       font-size: 14px;
       cursor: pointer;
       user-select: none;
+      transition: background 0.2s;
+    }
+    .flip-btn:hover {
+      background: #374151;
     }
   </style>
 </head>
 <body>
 
   <div class="card-container">
-    <div class="card" id="card">
+    <div class="card" id="card" onclick="handleCardClick(event)">
       
       <!-- FRENTE -->
       <div class="face front">
         <img src="pagina1.png" alt="Frente Ayrful" id="imgFront">
-        
-        <div class="flip-zone" onclick="rotateCard()" title="Girar tarjeta"></div>
 
-        <!-- Botones con los datos de mtoledo -->
-        <a href="https://wa.link/4ijgv7" target="_blank" class="btn-link btn-wa" title="WhatsApp"></a>
-        <a href="tel:+541132917719" class="btn-link btn-tel" title="Llamar"></a>
-        <a href="mailto:mtoledo@ayrful.com.ar" class="btn-link btn-mail" title="Email"></a>
-        <a href="https://maps.app.goo.gl/SNQX7NNQ1LH4BBee8" target="_blank" class="btn-link btn-map" title="Ubicación"></a>
-        <a href="https://ayrful.com.ar/" target="_blank" class="btn-web-front" title="Sitio Web"></a>
+        <div class="front-links">
+          <!-- Botones con los datos de M. Toledo -->
+          <a href="https://wa.link/4ijgv7" target="_blank" class="btn-link btn-wa" title="WhatsApp"></a>
+          <a href="tel:+541132917719" class="btn-link btn-tel" title="Llamar"></a>
+          <a href="mailto:mtoledo@ayrful.com.ar" class="btn-link btn-mail" title="Email"></a>
+          <a href="https://maps.app.goo.gl/SNQX7NNQ1LH4BBee8" target="_blank" class="btn-link btn-map" title="Ubicación"></a>
+          <a href="https://ayrful.com.ar/" target="_blank" class="btn-web-front" title="Sitio Web"></a>
+        </div>
       </div>
 
       <!-- DORSO -->
       <div class="face back">
         <img src="pagina2.png" alt="Dorso Ayrful" id="imgBack">
-        
-        <div class="flip-zone" onclick="rotateCard()" title="Volver al frente"></div>
 
-        <a href="https://ayrful.com.ar/" target="_blank" class="btn-web-back" title="Sitio Web Ayrful"></a>
+        <div class="back-links">
+          <!-- Botón del Dorso -->
+          <a href="https://ayrful.com.ar/" target="_blank" class="btn-web-back" title="Sitio Web Ayrful"></a>
+        </div>
       </div>
 
     </div>
   </div>
 
   <button class="flip-btn" onclick="rotateCard()">
-    Girar tarjeta 360°
+    🔄 Girar tarjeta 360°
   </button>
 
   <script>
     function rotateCard() {
       document.getElementById('card').classList.toggle('flipped');
+    }
+
+    function handleCardClick(event) {
+      // Si el usuario toca sobre un enlace <a>, abre el link y NO gira la tarjeta
+      if (event.target.tagName.toLowerCase() === 'a') {
+        return;
+      }
+      // Si toca en cualquier otra área de la tarjeta, la gira
+      rotateCard();
     }
 
     // Detector de nombres alternativos por si Windows renombró los archivos
